@@ -16,6 +16,7 @@ merge:
   rebase: true
   script: |-
     echo "Merging!!"
+    echo "some more@@"
   commanders:
   - froy001
 deploy:
