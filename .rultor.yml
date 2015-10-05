@@ -1,0 +1,35 @@
+install: |-
+  sudo locale-gen en_US en_US.UTF-8
+  sudo dpkg-reconfigure locales
+  export LC_ALL=en_US.UTF-8
+  export LANG=en_US.UTF-8
+  export LANGUAGE=en_US.UTF-8
+  sudo gem install --no-rdoc --no-ri pdd
+  sudo bundle install
+  cd ../..
+architect:
+- froy001
+assets:
+
+merge:
+  fast-forward: only
+  rebase: true
+  script: |-
+    echo "Merging!!"
+  commanders:
+  - froy001
+deploy:
+  script: |-
+    sudo bundle
+  commanders:
+  - froy001
+env:
+  MAVEN_OPTS: -XX:MaxPermSize=256m -Xmx1g
+release:
+  pre: false
+  script: |-
+    echo -e "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null" > ~/.ssh/config
+    curl -f --connect-timeout 30 --retry 8 --retry-delay 60 http://www.rultor.com
+    mvn clean site-deploy -Psite --errors --settings ../settings.xml --batch-mode || echo 'site-deploy failed'
+  commanders:
+  - froy001
